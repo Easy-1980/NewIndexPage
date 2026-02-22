@@ -1,0 +1,332 @@
+/* HTML全局样式 */
+html, body {
+    /* 强制撑开body */
+    width: 100%;
+    height: 100%;
+}
+
+
+body {
+    /* 对默认鼠标样式进行隐藏修改
+       没有使用任何图片文件，从内存里调用一个8×8的画布画出一个以（4，4）为圆心，半径为4的白色实心圆
+       大小为10px
+       本身是8×8，4 4意味着点击生效点在图片中心
+       auto为后备方案，若svg解析失败则显示默认样式
+       ！important则定义优先级为最高 */
+    cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' width='10px' height='10px'><circle cx='4' cy='4' r='4' fill='white' /></svg>") 4 4, auto !important;
+    margin: 0;
+    padding: 0;
+    /* 隐藏滚动条 */
+    overflow: hidden;
+}
+
+/* 自定义鼠标样式 */
+#mousePointer{
+    /* 绝对定位 */
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    /* 延迟效果。匀速延迟0.05s。视觉上展现出一钟“拖尾”效果 */
+    transition: 0.05s linear,opacity 0.3s ease;
+    /* 鼠标穿透属性，none表示该元素对鼠标事件“透明”，可进行穿透点击。若注释则鼠标只可点击到该元素 */
+    pointer-events: none;
+    /* 背景色为白色，透明度40% */
+    background: #ffffff40;
+    /* 将18px正方形变为圆 */
+    border-radius: 50%;
+    /* 保证该元素永远悬浮在其他元素上方 */
+    z-index: 9999999;
+}
+/* 鼠标移出页面后，光标隐藏 */
+.hidden {
+    /* 透明度为0，视觉上隐藏元素 */
+    opacity: 0;
+}
+
+
+/* 搜索框 */
+.search_container{
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    width: 80%;
+    max-width: 600px;
+    height: 45px;
+    /* 元素自身定位 */
+    transform: translate(-50%, -50%);
+    /* 用flex弹性布局让内部元素垂直居中 */
+    display: flex;
+    align-items: center;
+    /* 半透明白色背景 */
+    background-color: rgba(255, 255, 255, 0.7); 
+    /* 高度的一半，就是完美的半圆角 */
+    border-radius: 22.5px; 
+    opacity: 0.8;
+}
+/* 输入部分 */
+#input{
+    flex: 1;
+    height: 100%;
+    min-width: 0;       /* 解决搜索按钮被挤出搜索框的问题 */
+    padding: 0 12px;
+    font-size: 16px;
+    border: none;
+    background: transparent;
+    outline: none;
+    cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' width='10px' height='10px'><circle cx='4' cy='4' r='4' fill='white' /></svg>") 4 4, auto !important;
+}
+/* 预览部分 */
+#input::placeholder{
+    color:gray;
+    transition: color 0.4s ease;
+}
+/* 获得焦点后预览部分的显示 */
+#input:focus::placeholder{
+    color:transparent;
+}
+/* 搜索按钮 */
+#search_button{
+    z-index: 999;
+    position: relative;
+    font-size: 18px;
+    color: #0078D4;
+    padding-right: 25px; /* 右侧留白 */
+}
+/* 用伪元素画出黑色的提示框 */
+#search_button::after {
+    /* 核心魔法：提取 HTML 里的 data-title 内容作为文字 */
+    content: attr(data-title); 
+    
+    /*  绝对定位，把它放在按钮正下方 */
+    position: absolute;
+    top: 35px; 
+    left: 50%;
+    transform: translateX(-50%); /* 往左拉一半，保证正中间对齐放大镜 */
+    
+    /* 外观样式 */
+    background-color: rgba(40, 40, 40, 0.8); 
+    color: #fff; 
+    font-size: 12px; 
+    padding: 6px 12px; 
+    border-radius: 6px; 
+    white-space: nowrap; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
+    
+    /* 初始状态 */
+    opacity: 0;
+    visibility: hidden;
+    margin-top: 5px; 
+    transition: all 0.2s ease; 
+    /* 防止提示框阻挡鼠标点击事件 */
+    pointer-events: none;
+}
+/* 当鼠标悬浮在按钮上时，让提示框显形并往上浮一点 */
+#search_button:hover::after {
+    opacity: 1;
+    visibility: visible;
+    margin-top: 0;
+}
+
+
+/* 历史搜索记录*/
+.history-box {
+    z-index: 99;
+    position: absolute;
+    top: 55px;      /* 位于搜索框正下方一点点 */
+    width: 100%;        /* 和搜索框一样宽 */
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;        /* 圆角 */
+    padding: 10px 0;
+    font-size: 20px;
+    /* 动画效果 */
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+/* 隐藏状态 */
+.history-box.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px); 
+}
+/* 历史记录里的每一项 */
+.history-item {
+    padding: 8px 20px;
+    font-size: 14px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    /* 左边内容和右边按钮两端对齐 */
+    justify-content: space-between; 
+}
+
+/* 历史记录左边的容器（包含时钟图标和文字） */
+.history-item-left {
+    display: flex;
+    align-items: center;
+    flex: 1; 
+}
+
+.history-item-left i {
+    margin-right: 10px;
+    color: #888;
+}
+
+/* 单条记录删除按钮的样式 */
+.history-delete {
+    color: #ccc;
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+/* 鼠标悬浮在删除按钮上变红 */
+.history-delete:hover {
+    color: #ff4d4f;
+    background-color: rgba(255, 77, 79, 0.1);
+}
+
+/* 焦点聚集在历史记录的样式 */
+.history-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* 清空历史按钮的样式 */
+.history-clear {
+    text-align: right;
+    padding: 5px 20px 0;
+    font-size: 12px;
+    color: #0078D4;
+    border-top: 1px solid #eee;
+    margin-top: 5px;
+}
+/* 焦点聚集在清除历史记录的样式 */
+.history-clear:hover {
+    color: #2e475a;
+}
+
+
+/* 网站列表外部容器 */
+.nav-container {
+    position: absolute;
+    top: 25%;       /* 在搜索框(25%)的正下方 */
+    left: 50%;
+    transform: translateX(-50%); 
+    width: 80%; 
+    max-width: 800px;       /* 限制一个最大宽度，防止在大屏显示器上拉得太散 */
+    display: flex; 
+    flex-wrap: wrap;        /* 超出容器宽度后自动换行 */
+    justify-content: center;        /* 内部元素居中对齐 */
+    gap: 30px 45px;         /* 卡片之间的间距：上下30px，左右45px */
+    /* 当 transform 发生变化时，提供 0.3s 的丝滑弹性动画 */
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* 单个网站卡片整体 */
+.nav-item {
+    display: flex;
+    flex-direction: column;         /* 行排列 */
+    align-items: center; 
+    text-decoration: none;      /* 去除下划线 */
+    /* 添加平滑的过渡动画，控制悬浮时的上浮效果 */
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    opacity: 0.6;
+}
+
+/* 鼠标悬浮在整个卡片上时的效果 */
+.nav-item:hover {
+    transform: translateY(-8px);        /* 整体向上浮动 8px */
+    opacity: 1;         /* 提升不透明度，突出显示 */
+    cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' width='10px' height='10px'><circle cx='4' cy='4' r='4' fill='white' /></svg>") 4 4, auto !important;
+}
+
+/* 网站图标的圆形背景框 */
+.nav-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px; 
+    color: #fff; 
+    margin-bottom: 10px; 
+    background-color: rgba(255, 255, 255, 0.2); 
+    backdrop-filter: blur(8px); 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);         /* 淡色常驻阴影 */
+    transition: box-shadow 0.3s ease;       /* 阴影变化的过渡 */
+}
+
+/* 鼠标悬浮时，圆框的阴影加深 */
+.nav-item:hover .nav-icon {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 网站名称文字 */
+.nav-text {
+    font-size: 14px;
+    color: #fff; 
+    font-weight: 500;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6); 
+    letter-spacing: 1px;
+    opacity: 0.7;
+}
+
+
+/*  响应式布局。利用媒体查询 @media ，根据屏幕尺寸启用另一套CSS规则，自动调整大小 */
+
+/* 当屏幕宽度小于 768px (针对平板、竖屏iPad) 时 */
+@media screen and (max-width: 768px) {
+    /* 缩小网站卡片的间距 */
+    .nav-container {
+        gap: 20px 30px; 
+    }
+    
+    /* 缩小网站图标本身 */
+    .nav-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 24px;    /* 图标里面的矢量字号变小 */
+    }
+    
+    /* 缩小网站名称字体 */
+    .nav-text {
+        font-size: 13px;
+    }
+}
+
+/* 当屏幕宽度小于 480px (针对手机) 时 */
+@media screen and (max-width: 480px) {
+    /* 进一步缩小搜索栏的高度，显得更精致 */
+    .search_container {
+        height: 40px;
+        border-radius: 20px;    /* 圆角跟着高度的一半调整 */
+    }
+    
+    /* 进一步压缩网站列表 */
+    .nav-container {
+        gap: 15px 20px; 
+        top: calc(15% + 65px);  /* 搜索栏变矮，下方列表稍微往上提一点 */
+    }
+    
+    /* 图标变为迷你版 */
+    .nav-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+    
+    /* 文字变小 */
+    .nav-text {
+        font-size: 12px;
+    }
+    
+    /* 缩小搜索框的输入文字和放大镜图标 */
+    #input {
+        font-size: 14px;
+    }
+    #search_button {
+        font-size: 16px;
+        padding-right: 15px;
+    }
+}
