@@ -66,8 +66,11 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "Enter"&&!e.shiftKey) {
         Search();
     }
-    if(e.key=="Enter"&&e.shiftKey){
-        hotKey_Search();
+    if(e.key == "Enter" && e.shiftKey){
+        // 延迟 200 毫秒，等待松开 Shift 键，否则会导致直接打开新窗口而不是新标签页
+        setTimeout(() => {
+            hotKey_Search();
+        }, 200);
     }
 });
 
@@ -79,7 +82,6 @@ function Search() {
     }
     else{
         saveHistory(Input.value.trim());        // 保存历史记录
-        
         const query_url=bing_url+Input.value;
         window.open(query_url, "_blank");
     }
@@ -99,25 +101,25 @@ function hotKey_Search() {
 
     // b站、抖音、YouTube、Google、Gemini、ChatGPT、GitHub等常用网站的快捷键示例
     if(hotkey_value === "bilibili"||hotkey_value === "bl"){
-        window.open("https://www.bilibili.com/", "_self");
+        window.open("https://www.bilibili.com/", "_blank");
     }
     else if(hotkey_value === "抖音"||hotkey_value === "douyin"||hotkey_value === "dy"){
-        window.open("https://www.douyin.com/", "_self");
+        window.open("https://www.douyin.com/", "_blank");
     }
     else if(hotkey_value === "youtube"){
-        window.open("https://www.youtube.com/", "_self");
+        window.open("https://www.youtube.com/", "_blank");
     }
     else if(hotkey_value === "google"){
-        window.open("https://www.google.com/", "_self");
+        window.open("https://www.google.com/", "_blank");
     }
     else if(hotkey_value === "gemini"){
-        window.open("https://gemini.google.com/", "_self");
+        window.open("https://gemini.google.com/", "_blank");
     }
     else if(hotkey_value === "chatgpt"){
-        window.open("https://chat.openai.com/", "_self");
+        window.open("https://chat.openai.com/", "_blank");
     }
     else if(hotkey_value === "github"){
-        window.open("https://github.com/", "_self");
+        window.open("https://github.com/", "_blank");
     }
     else{
         // 如果输入的内容不匹配任何快捷键，则执行正常的搜索
@@ -301,9 +303,11 @@ const websites = [
     { name:"Grok", url:"https://grok.com/", icon:"fa-solid fa-slash fa-flip-horizontal", color:"#000000"},
     { name: "Bilibili", url: "https://www.bilibili.com/", icon: "fa-brands fa-bilibili", color: "#fb7299" }, 
     { name:"163Email", url:"https://mail.163.com/", icon:"fa-solid fa-envelope", color:"#dd3d4f"},
-    { name:"Henu", url:"https://xk.henu.edu.cn/cas/login.action", icon:"fa-solid fa-h", color:"#1381ca"},
+    { name:"Translate", url:"https://translate.google.com/", icon:"fa-solid fa-language", color:"#4285F4"},
+    // { name:"Henu", url:"https://xk.henu.edu.cn/cas/login.action", icon:"fa-solid fa-h", color:"#1381ca"},
     // { name: "知乎", url: "https://www.zhihu.com/", icon: "fa-brands fa-zhihu", color: "#0066ff" },
     // { name: "微博", url: "https://weibo.com/", icon: "fa-brands fa-weibo", color: "#e6162d" },
+    
     
 ];
 
