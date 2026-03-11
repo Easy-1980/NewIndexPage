@@ -106,7 +106,7 @@ function hotKey_Search() {
     else if(hotkey_value === "抖音"||hotkey_value === "douyin"||hotkey_value === "dy"){
         window.open("https://www.douyin.com/", "_blank");
     }
-    else if(hotkey_value === "youtube"){
+    else if(hotkey_value === "youtube"||hotkey_value === "yt"||hotkey_value === "ytb"){
         window.open("https://www.youtube.com/", "_blank");
     }
     else if(hotkey_value === "google"){
