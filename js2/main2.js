@@ -158,34 +158,63 @@ function saveHistory(keyword) {
     // 把新搜的词放到数组的最前面
     historyArray.unshift(keyword);
 
-    // 限制条数：最多只存 6 条历史记录
-    if (historyArray.length > 6) {
-        historyArray.pop();     // 把最老的一条踢掉
-    }
-
     // 把数组转化回字符串，存进浏览器的小仓库里
     localStorage.setItem("mySearchHistory", JSON.stringify(historyArray));
 }
 
+function deleteHistoryItem(wordToDelete) {
+    if (!wordToDelete) {
+        return;
+    }
+
+    let currentHistory = JSON.parse(localStorage.getItem("mySearchHistory")) || [];
+    let newHistory = currentHistory.filter(item => item !== wordToDelete);
+    localStorage.setItem("mySearchHistory", JSON.stringify(newHistory));
+    renderHistory(Input.value);
+    Input.focus();
+}
+
 // 渲染：把数据显示到页面上
-function renderHistory() {
+function renderHistory(filterKeyword = "") {
     let historyArray = JSON.parse(localStorage.getItem("mySearchHistory")) || [];
+    const keyword = filterKeyword.trim().toLowerCase();
+    const isMatchingHistory = keyword !== "";
     
     if (historyArray.length === 0) {
+        if (isMatchingHistory) {
+            HistoryBox.innerHTML = "";
+            HistoryBox.classList.add("hidden");
+            adjustNavPosition();
+            return false;
+        }
         HistoryBox.innerHTML = "<div style='padding: 10px 20px; color: #999; font-size: 14px;'>暂无搜索历史</div>";
-        return;
+        return true;
+    }
+
+    if (isMatchingHistory) {
+        historyArray = historyArray.filter(item => item.toLowerCase().includes(keyword));
+        if (historyArray.length === 0) {
+            HistoryBox.innerHTML = "";
+            HistoryBox.classList.add("hidden");
+            adjustNavPosition();
+            return false;
+        }
+        historyArray = historyArray.slice(0, 3);
+    } else {
+        historyArray = historyArray.slice(0, 6);
     }
 
     // 生成 HTML 列表
     let htmlStr = "";
     historyArray.forEach(item => {
+        const matchColor = isMatchingHistory ? ' style="color: #4285F4;"' : "";
         htmlStr += `
         <div class="history-item">
-            <div class="history-item-left" data-keyword="${item}">
-                <i class="fas fa-history"></i>
+            <div class="history-item-left" data-keyword="${item}"${matchColor}>
+                <i class="fas fa-history"${matchColor}></i>
                 <span>${item}</span>
             </div>
-            <i class="fas fa-times history-delete" data-keyword="${item}"></i>
+            <i class="fa-solid fa-xmark history-delete" data-keyword="${item}"></i>
         </div>`;
     });
     
@@ -212,23 +241,7 @@ function renderHistory() {
             // 解决方案：监听整个历史记录框的 mousedown 事件，阻止浏览器的默认行为
             e.stopPropagation();    
             
-            // 获取当前点击按钮对应的词
-            let wordToDelete = this.getAttribute("data-keyword");
-            
-            // 从本地存储里拿出数组
-            let currentHistory = JSON.parse(localStorage.getItem("mySearchHistory")) || [];
-            
-            // 用 filter 方法过滤掉这个词，保留那些不等于这个词的元素
-            let newHistory = currentHistory.filter(item => item !== wordToDelete);
-            
-            // 把新数组存回 localStorage
-            localStorage.setItem("mySearchHistory", JSON.stringify(newHistory));
-            
-            // 重新渲染列表（让删除的条目瞬间消失）
-            renderHistory(); 
-            
-            // 保持输入框获取焦点，防止历史记录框因为失去焦点而关闭
-            Input.focus();
+            deleteHistoryItem(this.getAttribute("data-keyword"));
         });
     });
 
@@ -236,12 +249,13 @@ function renderHistory() {
     document.getElementById("clear_btn").addEventListener("click", function(e) {
         e.stopPropagation();    
         localStorage.removeItem("mySearchHistory"); 
-        renderHistory();    
+        renderHistory(Input.value);    
         Input.focus();      
     });
     // 每次重新渲染完毕后，根据新的高度调整下方列表位置
     // 即当点击删除某一条历史记录时，下方的网站列表会跟着“缩”上来
     adjustNavPosition();
+    return true;
 }
 
 // 历史搜索记录框触发时机
@@ -252,11 +266,20 @@ Input.addEventListener("focus", function() {
         return; // 如果窗口已经切换过了，就不执行显示历史记录的操作
     }
     setTimeout(() => {
-        renderHistory();        // 每次显示之前先渲染，确保历史记录是最新的
-        HistoryBox.classList.remove("hidden");
+        const hasHistoryToShow = renderHistory(Input.value);        // 每次显示之前先渲染，确保历史记录是最新的
+        if (hasHistoryToShow) {
+            HistoryBox.classList.remove("hidden");
+        }
         // 展开后推挤列表
         adjustNavPosition();
     }, 500);        // 用setTimeout函数延迟 500 毫秒。没必要快速显示，有的时候很快就搜索完了，显示出来没意义
+});
+Input.addEventListener("input", function() {
+    const hasHistoryToShow = renderHistory(Input.value);
+    if (hasHistoryToShow) {
+        HistoryBox.classList.remove("hidden");
+    }
+    adjustNavPosition();
 });
 // 当用户点击网页其他地方，输入框失去焦点时，隐藏历史记录
 Input.addEventListener("blur", function() {
