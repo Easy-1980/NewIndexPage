@@ -323,15 +323,19 @@ const websites = [
     // { name: "抖音", url: "https://www.douyin.com/", icon: "fa-brands fa-tiktok", color: "#000000" },
     // { name: "YouTube", url: "https://www.youtube.com/", icon: "fa-brands fa-youtube", color: "#ff0000" },
     { name: "ChatGPT", url: "https://chat.openai.com/", icon: "si si-openai", color: "#10a37f" },
+    { name: "Claude", url: "https://claude.ai/", icon: "si si-anthropic", color: "#D97757" },
     { name:"Grok", url:"https://grok.com/", icon:"fa-solid fa-slash fa-flip-horizontal", color:"#000000"},
     { name: "Bilibili", url: "https://www.bilibili.com/", icon: "fa-brands fa-bilibili", color: "#fb7299" }, 
+    { name: "iLovePDF", url: "https://www.ilovepdf.com/", icon: "fa-solid fa-file-pdf", color: "#e5322d" },
     { name:"163Email", url:"https://mail.163.com/", icon:"fa-solid fa-envelope", color:"#dd3d4f"},
+    { name: "Henu", url: "http://mail.henu.edu.cn", icon: "fa-solid fa-envelope", color: "#1381ca" },
+    { name: "Flaticon", url: "https://www.flaticon.com/", icon: "fa-solid fa-icons", color: "#22b573" },
+    { name: "ConvertICO", url: "https://convertico.com/", icon: "fa-solid fa-arrows-rotate", color: "#3b82f6" },
+    { name: "SEAGM", url: "https://www.seagm.com/", icon: "fa-solid fa-gamepad", color: "#f59e0b" },
     { name:"Translate", url:"https://translate.google.com/", icon:"fa-solid fa-language", color:"#4285F4"},
     // { name:"Henu", url:"https://xk.henu.edu.cn/cas/login.action", icon:"fa-solid fa-h", color:"#1381ca"},
     // { name: "知乎", url: "https://www.zhihu.com/", icon: "fa-brands fa-zhihu", color: "#0066ff" },
     // { name: "微博", url: "https://weibo.com/", icon: "fa-brands fa-weibo", color: "#e6162d" },
-    
-    
 ];
 
 // 定义渲染函数：把数据变成实实在在的 HTML 塞进网页里
