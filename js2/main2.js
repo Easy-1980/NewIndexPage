@@ -327,6 +327,7 @@ const websites = [
     { name:"Grok", url:"https://grok.com/", icon:"fa-solid fa-slash fa-flip-horizontal", color:"#000000"},
     { name: "Bilibili", url: "https://www.bilibili.com/", icon: "fa-brands fa-bilibili", color: "#fb7299" }, 
     { name: "iLovePDF", url: "https://www.ilovepdf.com/", icon: "fa-solid fa-file-pdf", color: "#e5322d" },
+    { name: "Feishu", url: "https://fcnpi1h783p4.feishu.cn/drive/home/", icon: "fa-solid fa-bolt", color: "#3370ff" },
     { name:"163Email", url:"https://mail.163.com/", icon:"fa-solid fa-envelope", color:"#dd3d4f"},
     { name: "Henu", url: "http://mail.henu.edu.cn", icon: "fa-solid fa-envelope", color: "#1381ca" },
     { name: "Flaticon", url: "https://www.flaticon.com/", icon: "fa-solid fa-icons", color: "#22b573" },
