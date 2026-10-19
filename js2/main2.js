@@ -121,6 +121,9 @@ function hotKey_Search() {
     else if(hotkey_value === "github"){
         window.open("https://github.com/", "_blank");
     }
+    else if(hotkey_value === "gmail"||hotkey_value === "gm"){
+        window.open("https://mail.google.com/", "_blank");
+    }
     else{
         // 如果输入的内容不匹配任何快捷键，则执行正常的搜索
         Search();
